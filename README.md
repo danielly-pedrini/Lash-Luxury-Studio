@@ -14,11 +14,7 @@
           alt="Photo Projeto Lash Luxury Studio"
           class="hero-logo"
         />
-        <img
-          src="./assets/photo-projeto3"
-          alt="Photo Projeto Lash Luxury Studio"
-          class="hero-logo"
-        />
+      
 ---
 
 
