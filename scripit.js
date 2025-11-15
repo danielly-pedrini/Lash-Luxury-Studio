@@ -69,126 +69,138 @@ document.querySelectorAll('.service-card').forEach(el => {
     observer.observe(el);
 });
 
+// ==========================================
 // CARROSSEL DE GALERIA
+// ==========================================
 
-const carouselTrack = document.querySelector('.carousel-track');
-const slides = document.querySelectorAll('.carousel-slide');
-const prevBtn = document.querySelector('.carousel-btn.prev');
-const nextBtn = document.querySelector('.carousel-btn.next');
-const indicatorsContainer = document.querySelector('.carousel-indicators');
-
-let currentIndex = 0;
-let autoPlayInterval;
-
-// Criar indicadores
-slides.forEach((_, index) => {
-    const indicator = document.createElement('div');
-    indicator.classList.add('carousel-indicator');
-    if (index === 0) indicator.classList.add('active');
-    indicator.addEventListener('click', () => goToSlide(index));
-    indicatorsContainer.appendChild(indicator);
-});
-
-const indicators = document.querySelectorAll('.carousel-indicator');
-
-// Função para ir para um slide específico
-function goToSlide(index) {
-    currentIndex = index;
-    updateCarousel();
-    resetAutoPlay();
-}
-
-// Atualizar posição do carrossel
-function updateCarousel() {
-    const offset = -currentIndex * 100;
-    carouselTrack.style.transform = `translateX(${offset}%)`;
-    
-    // Atualizar indicadores
-    indicators.forEach((indicator, index) => {
-        indicator.classList.toggle('active', index === currentIndex);
-    });
-}
-
-// Próximo slide
-function nextSlide() {
-    currentIndex = (currentIndex + 1) % slides.length;
-    updateCarousel();
-}
-
-// Slide anterior
-function prevSlide() {
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    updateCarousel();
-}
-
-// Event listeners dos botões
-nextBtn.addEventListener('click', () => {
-    nextSlide();
-    resetAutoPlay();
-});
-
-prevBtn.addEventListener('click', () => {
-    prevSlide();
-    resetAutoPlay();
-});
-
-// Auto-play
-function startAutoPlay() {
-    autoPlayInterval = setInterval(nextSlide, 4000); // Muda a cada 4 segundos
-}
-
-function stopAutoPlay() {
-    clearInterval(autoPlayInterval);
-}
-
-function resetAutoPlay() {
-    stopAutoPlay();
-    startAutoPlay();
-}
-
-// Iniciar auto-play
-startAutoPlay();
-
-// Pausar auto-play ao passar o mouse
+// Verificar se os elementos do carrossel existem antes de inicializar
 const carouselContainer = document.querySelector('.carousel-container');
-carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-carouselContainer.addEventListener('mouseleave', startAutoPlay);
 
-// Suporte para touch/swipe em mobile
-let touchStartX = 0;
-let touchEndX = 0;
-
-carouselContainer.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    stopAutoPlay();
-}, { passive: true });
-
-carouselContainer.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-    startAutoPlay();
-}, { passive: true });
-
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
+// Só inicializa o carrossel se o container existir
+if (carouselContainer) {
     
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
-            nextSlide();
-        } else {
-            prevSlide();
+    const carouselTrack = carouselContainer.querySelector('.carousel-track');
+    const slides = carouselContainer.querySelectorAll('.carousel-slide');
+    const prevBtn = carouselContainer.querySelector('.carousel-btn.prev');
+    const nextBtn = carouselContainer.querySelector('.carousel-btn.next');
+    const indicatorsContainer = carouselContainer.querySelector('.carousel-indicators');
+
+    // Só continua se todos os elementos existirem
+    if (carouselTrack && slides.length > 0 && prevBtn && nextBtn && indicatorsContainer) {
+        
+        let currentIndex = 0;
+        let autoPlayInterval;
+
+        // Criar indicadores
+        slides.forEach((_, index) => {
+            const indicator = document.createElement('div');
+            indicator.classList.add('carousel-indicator');
+            if (index === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => goToSlide(index));
+            indicatorsContainer.appendChild(indicator);
+        });
+
+        const indicators = carouselContainer.querySelectorAll('.carousel-indicator');
+
+        // Função para ir para um slide específico
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+            resetAutoPlay();
         }
+
+        // Atualizar posição do carrossel
+        function updateCarousel() {
+            const offset = -currentIndex * 100;
+            carouselTrack.style.transform = `translateX(${offset}%)`;
+            
+            // Atualizar indicadores
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // Próximo slide
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        }
+
+        // Slide anterior
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateCarousel();
+        }
+
+        // Event listeners dos botões
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            resetAutoPlay();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            resetAutoPlay();
+        });
+
+        // Auto-play
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(nextSlide, 4000); // Muda a cada 4 segundos
+        }
+
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+        }
+
+        function resetAutoPlay() {
+            stopAutoPlay();
+            startAutoPlay();
+        }
+
+        // Iniciar auto-play
+        startAutoPlay();
+
+        // Pausar auto-play ao passar o mouse
+        carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+        carouselContainer.addEventListener('mouseleave', startAutoPlay);
+
+        // Suporte para touch/swipe em mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        carouselContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            stopAutoPlay();
+        }, { passive: true });
+
+        carouselContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+            startAutoPlay();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        }
+
+        // Navegação por teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+                resetAutoPlay();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+                resetAutoPlay();
+            }
+        });
     }
 }
-
-// Navegação por teclado
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-        prevSlide();
-        resetAutoPlay();
-    } else if (e.key === 'ArrowRight') {
-        nextSlide();
-        resetAutoPlay();
-    }
-});
