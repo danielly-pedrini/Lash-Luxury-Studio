@@ -10,7 +10,7 @@
           class="hero-logo"
         />
         <img
-          src="./assets/photo-projeto2"
+          src="./assets/photo-projeto2.png"
           alt="Photo Projeto Lash Luxury Studio"
           class="hero-logo"
         />
