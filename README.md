@@ -15,8 +15,6 @@
           class="hero-logo"
         />
       
----
-
 
 ## ✨ Sobre o Projeto
 
